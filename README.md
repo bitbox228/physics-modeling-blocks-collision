@@ -9,3 +9,5 @@
 ![](src/blocks.png)
 
 $m_2 = m_1 \cdot 10^n$, где $n=1,2,3,4,\dots$
+
+[Код](main.py)
