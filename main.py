@@ -144,27 +144,27 @@ def main():
     fig, axs = plt.subplots(2, 3, figsize=(15, 8))
 
     axs[0, 0].plot(times, x_big_block)
-    axs[0, 0].set_ylabel("x большого блока")
+    axs[0, 0].set_ylabel("x большого блока (пикс.)")
     axs[0, 0].set_title("Изменения координаты x")
 
     axs[1, 0].plot(times, x_small_block)
-    axs[1, 0].set_ylabel("x маленького блока")
+    axs[1, 0].set_ylabel("x маленького блока (пикс.)")
     axs[1, 0].set_xlabel("Количество пересчетов")
 
     axs[0, 1].plot(times, v_big_block)
-    axs[0, 1].set_ylabel("v большого блока")
+    axs[0, 1].set_ylabel("v большого блока (пикс./изм. экр.)")
     axs[0, 1].set_title("Изменения скорости v")
 
     axs[1, 1].plot(times, v_small_block)
-    axs[1, 1].set_ylabel("v маленького блока")
+    axs[1, 1].set_ylabel("v маленького блока (пикс./изм. экр.)")
     axs[1, 1].set_xlabel("Количество пересчетов")
 
     axs[0, 2].plot(times, a_big_block)
-    axs[0, 2].set_ylabel("a большого блока")
+    axs[0, 2].set_ylabel("a большого блока (пикс./изм. экр.^2)")
     axs[0, 2].set_title("Изменения ускорения a")
 
     axs[1, 2].plot(times, a_small_block)
-    axs[1, 2].set_ylabel("a маленького блока")
+    axs[1, 2].set_ylabel("a маленького блока (пикс./изм. экр.^2)")
     axs[1, 2].set_xlabel("Количество пересчетов")
 
     fig.tight_layout()
