@@ -1,5 +1,6 @@
 import pygame
 import sys
+import matplotlib.pyplot as plt
 
 pygame.init()
 
@@ -36,6 +37,7 @@ class Block:
         self.x = x
         self.y = y
         self.mass = mass
+        self.prev_velocity = velocity
         self.velocity = velocity
         self.length = length
 
@@ -44,6 +46,7 @@ class Block:
 
     def wall_collision(self) -> bool:
         if self.x <= WALL_X:
+            self.prev_velocity = self.velocity
             self.velocity = -self.velocity
             return True
         return False
@@ -59,6 +62,8 @@ def blocks_collision(first_block: Block, second_block: Block) -> bool:
 
 
 def update_velocities(first_block: Block, second_block: Block) -> None:
+    first_block.prev_velocity = first_block.velocity
+    second_block.prev_velocity = second_block.velocity
     v = first_block.velocity
     u = second_block.velocity
     m1 = first_block.mass
@@ -88,24 +93,84 @@ def main():
     big_block = Block(BIG_BLOCK_X, BIG_BLOCK_Y, (10 ** POWER) * MASS, V_0, BIG_BLOCK_LEN)
 
     count = 0
+    time = 0
+
+    times = []
+    x_small_block = []
+    x_big_block = []
+    v_small_block = []
+    v_big_block = []
+    a_small_block = []
+    a_big_block = []
 
     update_screen(screen, big_block, small_block, count)
 
     while True:
+
+        x_big_block.append(big_block.x)
+        x_small_block.append(small_block.x)
+        v_big_block.append(big_block.velocity)
+        v_small_block.append(small_block.velocity)
+        a_big_block.append(big_block.velocity - big_block.prev_velocity)
+        a_small_block.append(small_block.velocity - small_block.prev_velocity)
+
+        times.append(time)
+        time += 1
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
-                sys.exit()
+                break
+
+        if big_block.x > SCREEN_WIDTH:
+            pygame.quit()
+            break
+
         for i in range(CYCLE_COUNT):
+
             if blocks_collision(small_block, big_block):
                 count += 1
                 COLLISION_SOUND.play()
+
             if small_block.wall_collision():
                 count += 1
                 COLLISION_SOUND.play()
+
             big_block.update_x()
             small_block.update_x()
+
         update_screen(screen, big_block, small_block, count)
+
+    fig, axs = plt.subplots(2, 3, figsize=(15, 8))
+
+    axs[0, 0].plot(times, x_big_block)
+    axs[0, 0].set_ylabel("x большого блока")
+    axs[0, 0].set_title("Изменения координаты x")
+
+    axs[1, 0].plot(times, x_small_block)
+    axs[1, 0].set_ylabel("x маленького блока")
+    axs[1, 0].set_xlabel("Количество пересчетов")
+
+    axs[0, 1].plot(times, v_big_block)
+    axs[0, 1].set_ylabel("v большого блока")
+    axs[0, 1].set_title("Изменения скорости v")
+
+    axs[1, 1].plot(times, v_small_block)
+    axs[1, 1].set_ylabel("v маленького блока")
+    axs[1, 1].set_xlabel("Количество пересчетов")
+
+    axs[0, 2].plot(times, a_big_block)
+    axs[0, 2].set_ylabel("a большого блока")
+    axs[0, 2].set_title("Изменения ускорения a")
+
+    axs[1, 2].plot(times, a_small_block)
+    axs[1, 2].set_ylabel("a маленького блока")
+    axs[1, 2].set_xlabel("Количество пересчетов")
+
+    fig.tight_layout()
+    plt.show()
+
+    sys.exit()
 
 
 if __name__ == '__main__':
